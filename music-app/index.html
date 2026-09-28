@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SongForge</title>
+  <meta name="description" content="Generate AI music with the Suno API.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <div>
+        <h1>SongForge</h1>
+        <p class="tagline">Describe it. Hear it. AI music with Suno.</p>
+      </div>
+      <div class="credits" id="credits" hidden>Credits: <strong id="creditsValue">–</strong></div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- API key -->
+    <section class="card" id="keyCard">
+      <h2>Your Suno API key</h2>
+      <p class="muted">Get one at <a href="https://sunoapi.org/api-key" target="_blank" rel="noopener">sunoapi.org/api-key</a>. It stays in your browser and is only sent with your own requests.</p>
+      <form id="keyForm" class="row">
+        <input id="apiKey" type="password" autocomplete="off" placeholder="Paste your API key" required>
+        <button type="submit" class="btn">Save key</button>
+        <button type="button" class="btn ghost" id="clearKey">Forget</button>
+      </form>
+      <label class="check"><input type="checkbox" id="rememberKey"> Remember on this device</label>
+      <p class="status" id="keyStatus"></p>
+    </section>
+
+    <!-- Generator -->
+    <section class="card">
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab active" data-mode="simple" role="tab">Simple</button>
+        <button type="button" class="tab" data-mode="custom" role="tab">Custom</button>
+      </div>
+
+      <form id="genForm">
+        <div class="mode-simple">
+          <label for="prompt">Describe your song</label>
+          <textarea id="prompt" rows="3" maxlength="3000" placeholder="An upbeat summer pop song about road trips with friends, catchy chorus"></textarea>
+          <label for="simpleStyle">Style / genre</label>
+          <input id="simpleStyle" maxlength="1000" placeholder="pop, upbeat, acoustic guitar">
+          <p class="muted small">Need ideas? Try one:</p>
+          <div class="chips" id="ideaChips"></div>
+        </div>
+
+        <div class="mode-custom" hidden>
+          <div class="grid2">
+            <div>
+              <label for="title">Title</label>
+              <input id="title" maxlength="80" placeholder="Midnight Drive">
+            </div>
+            <div>
+              <label for="style">Style / genre</label>
+              <input id="style" maxlength="1000" placeholder="synthwave, retro, dreamy female vocals">
+            </div>
+          </div>
+          <div class="lyrics-head">
+            <label for="lyrics">Lyrics</label>
+            <button type="button" class="btn small ghost" id="openLyrics">✨ Write lyrics with AI</button>
+          </div>
+          <textarea id="lyrics" rows="8" maxlength="5000" placeholder="[Verse]&#10;Neon lights across the dashboard glow&#10;&#10;[Chorus]&#10;..."></textarea>
+
+          <details class="advanced">
+            <summary>Advanced options</summary>
+            <div class="grid2">
+              <div>
+                <label for="vocalGender">Vocal gender</label>
+                <select id="vocalGender">
+                  <option value="">Any</option>
+                  <option value="f">Female</option>
+                  <option value="m">Male</option>
+                </select>
+              </div>
+              <div>
+                <label for="duration">Length (seconds, 10–360)</label>
+                <input id="duration" type="number" min="10" max="360" step="1" value="120">
+              </div>
+            </div>
+            <label for="negativeTags">Avoid these styles</label>
+            <input id="negativeTags" maxlength="1000" placeholder="heavy metal, screaming">
+            <div class="grid2">
+              <div>
+                <label for="styleWeight">Style adherence <output id="styleWeightOut">0.65</output></label>
+                <input id="styleWeight" type="range" min="0" max="1" step="0.05" value="0.65">
+              </div>
+              <div>
+                <label for="weirdness">Weirdness <output id="weirdnessOut">0.50</output></label>
+                <input id="weirdness" type="range" min="0" max="1" step="0.05" value="0.5">
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <div class="row options">
+          <label class="check"><input type="checkbox" id="instrumental"> Instrumental (no vocals)</label>
+          <label class="inline">Model
+            <select id="model">
+              <option value="V6">V6 – best quality</option>
+              <option value="V6_MINI">V6 Mini – faster</option>
+              <option value="V6_WILD">V6 Wild – experimental</option>
+            </select>
+          </label>
+        </div>
+
+        <button type="submit" class="btn primary big" id="genBtn">🎵 Generate music</button>
+        <p class="status" id="genStatus" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- Results -->
+    <section>
+      <div class="section-head">
+        <h2>Your songs</h2>
+        <button type="button" class="btn small ghost" id="clearHistory">Clear history</button>
+      </div>
+      <p class="muted small">Each generation makes 2 variations. Suno keeps files for about 14 days — download what you want to keep.</p>
+      <div id="results" class="results"></div>
+      <p class="muted empty" id="emptyMsg">No songs yet. Generate your first one above.</p>
+    </section>
+  </main>
+
+  <!-- Lyrics dialog -->
+  <dialog id="lyricsDialog">
+    <form method="dialog" class="dialog-body" id="lyricsForm">
+      <h2>Write lyrics with AI</h2>
+      <label for="lyricsPrompt">What's the song about? (max 200 characters)</label>
+      <input id="lyricsPrompt" maxlength="200" placeholder="Falling in love on a rainy night in the city">
+      <div class="row">
+        <button type="button" class="btn primary" id="lyricsGo">Generate lyrics</button>
+        <button type="submit" class="btn ghost" value="cancel">Close</button>
+      </div>
+      <p class="status" id="lyricsStatus"></p>
+      <div id="lyricsResults" class="lyrics-results"></div>
+    </form>
+  </dialog>
+
+  <footer class="wrap muted small">Powered by <a href="https://docs.sunoapi.org" target="_blank" rel="noopener">Suno API</a>.</footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

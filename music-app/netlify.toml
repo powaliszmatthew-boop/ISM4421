@@ -1,0 +1,4 @@
+# Deploy with Netlify "Base directory" set to music-app
+[build]
+  publish = "."
+  functions = "netlify/functions"
