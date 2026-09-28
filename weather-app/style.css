@@ -1,0 +1,120 @@
+:root {
+  --fau-blue: #003366;   /* FAU Blue, per fau.edu/styleguide/colors */
+  --fau-red: #cc0000;    /* FAU Red */
+  --bg: #f3f6fa;
+  --card: #ffffff;
+  --text: #1a2330;
+  --muted: #5b6878;
+  --border: #dde3ea;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1520;
+    --card: #162232;
+    --text: #e8eef5;
+    --muted: #9aa8b8;
+    --border: #26354a;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+.topbar {
+  background: var(--fau-blue);
+  color: #fff;
+  padding: 20px 16px;
+  border-bottom: 4px solid var(--fau-red);
+  text-align: center;
+}
+.topbar h1 { margin: 0; font-size: 1.8rem; }
+.tagline { margin: 4px 0 0; opacity: .85; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 16px; }
+
+.controls {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+  margin-bottom: 12px;
+}
+.controls label { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; color: var(--muted); }
+.search { display: flex; gap: 8px; align-items: flex-end; }
+select, input, button {
+  font: inherit; padding: 8px 10px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--card); color: var(--text);
+}
+button { cursor: pointer; background: var(--fau-blue); color: #fff; border-color: var(--fau-blue); }
+button:hover { filter: brightness(1.15); }
+.units { display: flex; margin-left: auto; }
+.units button { background: var(--card); color: var(--text); border-color: var(--border); border-radius: 0; }
+.units button:first-child { border-radius: 8px 0 0 8px; }
+.units button:last-child { border-radius: 0 8px 8px 0; }
+.units button.active { background: var(--fau-red); border-color: var(--fau-red); color: #fff; }
+
+.results {
+  list-style: none; padding: 0; margin: 0 0 12px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+}
+.results li button {
+  width: 100%; text-align: left; background: none; color: var(--text);
+  border: 0; border-bottom: 1px solid var(--border); border-radius: 0;
+}
+.results li:last-child button { border-bottom: 0; }
+.results li button:hover { background: var(--bg); }
+
+.status { min-height: 1.2em; color: var(--muted); }
+.status.error { color: var(--fau-red); }
+
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px; margin-bottom: 16px;
+}
+.card h3 { margin: 0 0 12px; color: var(--fau-blue); }
+@media (prefers-color-scheme: dark) { .card h3 { color: #8fb8e6; } }
+
+.current { display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; align-items: center; }
+.current h2 { margin: 0; }
+.muted { color: var(--muted); margin: 2px 0; }
+.small { font-size: .8rem; }
+.now { display: flex; align-items: center; gap: 8px; }
+.big-icon { font-size: 3rem; }
+.big-temp { font-size: 3.2rem; font-weight: 700; }
+.desc { grid-column: 1 / -1; margin: 0; font-size: 1.1rem; }
+.stats {
+  grid-column: 1 / -1; display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px; margin: 8px 0 0;
+}
+.stats div { background: var(--bg); border-radius: 8px; padding: 8px 10px; }
+.stats dt { font-size: .75rem; color: var(--muted); }
+.stats dd { margin: 2px 0 0; font-weight: 600; }
+
+.hourly { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.hour {
+  flex: 0 0 72px; text-align: center; background: var(--bg);
+  border-radius: 8px; padding: 8px 4px; font-size: .85rem;
+}
+.hour .i { font-size: 1.4rem; display: block; margin: 4px 0; }
+.hour .p { color: var(--muted); font-size: .75rem; }
+
+.daily { display: flex; flex-direction: column; }
+.day {
+  display: grid; grid-template-columns: 90px 36px 1fr auto; gap: 10px;
+  align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border);
+}
+.day:last-child { border-bottom: 0; }
+.day .i { font-size: 1.4rem; }
+.day .d { color: var(--muted); font-size: .9rem; }
+.day .t { font-weight: 600; white-space: nowrap; }
+.day .t span { color: var(--muted); font-weight: 400; }
+
+.foot { text-align: center; color: var(--muted); font-size: .8rem; padding: 16px; }
+.foot a { color: inherit; }
+
+@media (max-width: 560px) {
+  .units { margin-left: 0; }
+  .current { grid-template-columns: 1fr; }
+  .day { grid-template-columns: 70px 30px 1fr auto; }
+  .day .d { font-size: .8rem; }
+}
