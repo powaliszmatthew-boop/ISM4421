@@ -10,6 +10,12 @@ A static web app that recommends NFL bets (spread, over/under, and optionally mo
 - **Picks:** a bet is recommended when model probability × decimal odds − 1 ≥ your minimum edge. Stakes use quarter-Kelly, capped at 3% of bankroll.
 - **Track record:** every past pick was made without seeing that week's results, so the season-by-season record is an honest out-of-sample backtest.
 
+## Accounts
+
+Sign-in uses email and password through Supabase Auth (project `ISM4421NFLPicks`). The app stays hidden until someone signs in. Each user's edge, markets, and bankroll are saved to the `user_settings` table, and row-level security limits every user to their own row. The project URL and publishable key are in `config.js`. The table definition is in `supabase/migrations/`.
+
+In the Supabase dashboard under **Authentication → URL Configuration**, set **Site URL** to the deployed address and add it to **Redirect URLs**, or confirmation and password-reset links won't come back to the app.
+
 ## Run locally
 
 Open `index.html` in a browser, or serve the folder:
